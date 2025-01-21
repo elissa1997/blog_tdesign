@@ -1,32 +1,36 @@
 <template>
-  <div id="app">
-    <nav>
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </nav>
+  <div id="App">
+    <Nav/>
     <router-view/>
+    <PageFooter/>
+    <remote-script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/KaTeX/0.11.1/katex.min.js"></remote-script>
+    
   </div>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+<script>
+import Nav from "@/components/Nav.vue";
+import PageFooter from "@/components/PageFooter.vue"
+import "@/util/remoteJs.js";
+export default {
+  name: "App",
+  props: {},
+  components: {
+    Nav,
+    PageFooter
+  },
+  data() {
+    return {}
+  },
+  methods: {},
+  mounted() {},
+  watch: {}
 }
-
-nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
+</script>
+<style lang="scss">
+// body {
+//   margin: 0px !important;
+// }
+#App{
 }
 </style>
