@@ -9,7 +9,7 @@
         @reset="onReset"
         @submit="onSubmit"
         scrollToFirstError="smooth"
-        v-if="$store.state.dict.article"
+        v-if="$store.state.dict"
       >
         <t-form-item label="文章标题" name="title">
           <t-input v-model="searchData.title" placeholder="请输入文章标题"></t-input>
@@ -17,13 +17,13 @@
 
         <t-form-item label="文章分类" name="category">
           <t-select v-model="searchData.category">
-            <t-option :label="option.value" :value="option.key" v-for="option in $store.getters['dict/getDictObj']('article', 'category')" :key="option.key" />
+            <t-option :label="option.name" :value="option.value" v-for="option in $store.getters['dictv2/getDictObj']('articleType')" :key="option.value" />
           </t-select>
         </t-form-item>
 
         <t-form-item label="文章状态" name="status">
           <t-select v-model="searchData.status">
-            <t-option :label="option.value" :value="option.key" v-for="option in $store.getters['dict/getDictObj']('article', 'status')" :key="option.key" />
+            <t-option :label="option.name" :value="option.value" v-for="option in $store.getters['dictv2/getDictObj']('statusType')" :key="option.value" />
           </t-select>
         </t-form-item>
 
@@ -81,7 +81,7 @@
         </template>
 
         <template #category="{ row }">
-          <t-tag theme="primary">{{$store.getters['dict/transDict']('article', 'category', row.category)}}</t-tag>
+          <t-tag theme="primary">{{$store.getters['dictv2/transDict']('articleType', row.category)}}</t-tag>
         </template>
 
         <!-- <template #comments="{ row }">
@@ -89,7 +89,7 @@
         </template> -->
 
         <template #status="{ row }">
-          <t-tag :theme="row.status? 'success':'danger'">{{$store.getters['dict/transDict']('article', 'status', row.status)}}</t-tag>
+          <t-tag :theme="row.status? 'success':'danger'">{{$store.getters['dictv2/transDict']('statusType', row.status)}}</t-tag>
         </template>
 
         <template #action="{ row }">
@@ -176,9 +176,12 @@ export default {
   },
   methods: {
     async getDict() {
-      await this.$store.dispatch('dict/cacheDict', {
-        fileName: 'dict_article',
-        mutationsName: 'SET_ARTICLE'
+      await this.$store.dispatch('dictv2/cacheDict', {
+        dict_type: 'articleType',
+      });
+
+      await this.$store.dispatch('dictv2/cacheDict', {
+        dict_type: 'statusType',
       });
     },
 

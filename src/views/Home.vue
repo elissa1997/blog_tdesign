@@ -31,7 +31,7 @@
                 </span>
                 <span class="metaItem category">
                   <ApplicationTwo theme="outline" :strokeWidth="3"/>
-                  {{$store.getters['dict/transDict']('article', 'category', item.category)}}
+                  {{$store.getters['dictv2/transDict']('articleType', item.category)}}
                 </span>
                 <span class="metaItem comment">
                   <Comment theme="outline" :strokeWidth="3"/>
@@ -137,9 +137,8 @@ export default {
 
   },
   async mounted() {
-    await this.$store.dispatch('dict/cacheDict', {
-      fileName: 'dict_article',
-      mutationsName: 'SET_ARTICLE'
+    await this.$store.dispatch('dictv2/cacheDict', {
+      dict_type: 'articleType',
     });
 
     this.getList();

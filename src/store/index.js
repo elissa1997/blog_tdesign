@@ -4,6 +4,7 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 import style from './modules/style.js';
+import dictv2 from './modules/dictv2.js';
 import dict from './modules/dict.js';
 import user from './modules/user.js';
 
@@ -14,6 +15,7 @@ export default new Vuex.Store({
   actions: {},
   modules: {
     style,
+    dictv2,
     dict,
     user
   }

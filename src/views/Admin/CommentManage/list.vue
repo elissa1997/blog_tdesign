@@ -8,7 +8,7 @@
         @reset="onReset"
         @submit="onSubmit"
         scrollToFirstError="smooth"
-        v-if="$store.state.dict.article"
+        v-if="$store.state.dict"
       >
 
         <t-form-item label="所属文章" name="article">
@@ -34,7 +34,7 @@
 
         <t-form-item label="评论状态" name="status">
           <t-select v-model="searchData.status">
-            <t-option :label="option.value" :value="option.key" v-for="option in $store.getters['dict/getDictObj']('article', 'status')" :key="option.key" />
+            <t-option :label="option.name" :value="option.value" v-for="option in $store.getters['dictv2/getDictObj']('statusType')" :key="option.value" />
           </t-select>
         </t-form-item>
 
@@ -116,7 +116,7 @@
         </template>
 
         <template #status="{ row }">
-          <t-tag :theme="row.status? 'success':'danger'">{{$store.getters['dict/transDict']('article', 'status', row.status)}}</t-tag>
+          <t-tag :theme="row.status? 'success':'danger'">{{$store.getters['dictv2/transDict']('statusType', row.status)}}</t-tag>
         </template>
 
         <template #action="{ row }">
@@ -220,9 +220,12 @@ export default {
   },
   methods: {
     async getDict() {
-      await this.$store.dispatch('dict/cacheDict', {
-        fileName: 'dict_article',
-        mutationsName: 'SET_ARTICLE'
+      await this.$store.dispatch('dictv2/cacheDict', {
+        dict_type: 'articleType',
+      });
+
+      await this.$store.dispatch('dictv2/cacheDict', {
+        dict_type: 'statusType',
       });
     },
 

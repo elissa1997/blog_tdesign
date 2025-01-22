@@ -18,7 +18,7 @@
               <div class="text">
                 <div class="title">{{articleDetail.title}}</div>
                 <div class="meta">
-                  <div class="category metaItem"><ApplicationTwo theme="outline" :strokeWidth="3"/>{{$store.getters['dict/transDict']('article', 'category', articleDetail.category)}}</div>
+                  <div class="category metaItem"><ApplicationTwo theme="outline" :strokeWidth="3"/>{{$store.getters['dictv2/transDict']('articleType', articleDetail.category)}}</div>
                   <div class="datetime metaItem"><Calendar theme="outline" :strokeWidth="3"/>{{$dayjs(articleDetail.createdAt).format('YYYY-MM-DD HH:mm')}}</div>
                 </div>
               </div>
@@ -189,9 +189,8 @@ export default {
 
   },
   async mounted() {
-    await this.$store.dispatch('dict/cacheDict', {
-      fileName: 'dict_article',
-      mutationsName: 'SET_ARTICLE'
+    await this.$store.dispatch('dictv2/cacheDict', {
+      dict_type: 'articleType',
     });
 
     this.getArticleDetail();

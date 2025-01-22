@@ -113,6 +113,16 @@ const routes = [
         },
         component: () => import('@/views/Admin/CommentManage/list.vue'),
       },
+      {
+        path: 'othercommentlist',
+        name: 'Admin-OtherComment-List',
+        meta: {
+          auth: true,
+          footer: false,
+          active: ['Admin', 'OtherComment']
+        },
+        component: () => import('@/views/Admin/otherComment/list.vue'),
+      },
     ]
   }
 ]

@@ -23,8 +23,8 @@ export function instance_api(config) {
     },
     err => {
       // 如果响应有错误（非200状态码），你可以自定义错误处理逻辑
+      console.error('HTTP 请求错误:', err);
       const response = err.response;
-
       // 根据状态码判断如何处理
       if (response) {
         const { status } = response;
