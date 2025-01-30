@@ -1,7 +1,7 @@
 <template>
-  <div id="Admin-Article-list">
-    <div class="card search" ref="search">
+  <div id="Admin-Dict-list">
 
+    <div class="card search" ref="search">
       <t-form
         :data="searchData"
         layout="inline"
@@ -11,20 +11,9 @@
         scrollToFirstError="smooth"
         v-if="$store.state.dict"
       >
-        <t-form-item label="文章标题" name="title">
-          <t-input v-model="searchData.title" placeholder="请输入文章标题"></t-input>
-        </t-form-item>
 
-        <t-form-item label="文章分类" name="category">
-          <t-select v-model="searchData.category">
-            <t-option :label="option.name" :value="option.value" v-for="option in $store.getters['dictv2/getDictObj']('articleType')" :key="option.value" />
-          </t-select>
-        </t-form-item>
-
-        <t-form-item label="文章状态" name="status">
-          <t-select v-model="searchData.status">
-            <t-option :label="option.name" :value="option.value" v-for="option in $store.getters['dictv2/getDictObj']('statusType')" :key="option.value" />
-          </t-select>
+        <t-form-item label="字典类型" name="dict_type_name">
+          <t-input v-model="searchData.dict_type_name" placeholder="请输入字典内容"></t-input>
         </t-form-item>
 
         <t-form-item>
@@ -35,33 +24,33 @@
         </t-form-item>
 
       </t-form>
-
     </div>
 
     <div class="card table">
 
       <div class="operate">
         <t-space>
-          <t-button theme="primary" @click="gotoArticleEdit('add')">
-            <template #icon><AddOne theme="outline"/></template>新增文章
+
+          <t-button theme="primary" @click="gotoDictEdit('add')">
+            <template #icon><AddOne theme="outline"/></template>新增字典
           </t-button>
 
-          <t-button theme="danger" :disabled="!articleList.selectedRowKeys.length" @click="del('multiple')">
+          <t-button theme="danger" :disabled="!dictList.selectedRowKeys.length" @click="del('multiple')">
             <template #icon><Delete theme="outline"/></template>删除勾选
           </t-button>
         </t-space>
       </div>
 
       <t-table
-        :selected-row-keys="articleList.selectedRowKeys"
+        :selected-row-keys="dictList.selectedRowKeys"
         rowKey="id"
-        :data="articleList.data"
-        :columns="articleList.columns"
+        :data="dictList.data"
+        :columns="dictList.columns"
         :stripe="false"
         :bordered="true"
         :hover="false"
         size="medium"
-        :height="articleList.tableHeight"
+        :height="dictList.tableHeight"
         table-layout="fixed"
         @page-change="pageChange"
         @select-change="tableSelectChange"
@@ -76,26 +65,13 @@
         cellEmptyContent="-"
         resizable
       >
-        <template #created_at="{ row }">
+        <template #createdAt="{ row }">
           {{ $dayjs(row.createdAt).format('YYYY-MM-DD HH:MM') }}
-        </template>
-
-        <template #category="{ row }">
-          <t-tag theme="primary">{{$store.getters['dictv2/transDict']('articleType', row.category)}}</t-tag>
-        </template>
-
-        <!-- <template #comments="{ row }">
-          <t-tag>{{ row.comments.length }}</t-tag>
-        </template> -->
-
-        <template #status="{ row }">
-          <t-tag :theme="row.status? 'success':'danger'">{{$store.getters['dictv2/transDict']('statusType', row.status)}}</t-tag>
         </template>
 
         <template #action="{ row }">
           <t-space>
-
-          <t-button theme="primary" size="small" @click="gotoArticleEdit('edit', row.id)">
+          <t-button theme="primary" size="small" @click="gotoDictEdit('edit', row)">
             <template #icon><Edit theme="outline"/></template>编辑
           </t-button>
 
@@ -119,45 +95,55 @@
       <p>{{delConfirm.content}}</p>
     </t-dialog>
 
+    <t-dialog
+      :header="editModal.title"
+      :visible.sync="editModal.visible"
+      :onClose="() => {this.editModal.visible = false}"
+      draggable
+      :footer="false"
+    >
+      <div slot="body">
+        <editForm v-if="editModal.visible" :type="editModal.type" :data="editModal.data" @refreshList="refreshList"/>
+      </div>
+    </t-dialog>
+
   </div>
 </template>
 
 <script>
 import { resetObj, filterObj } from "@/util/tool.js";
-import { list, del } from "@/network/article.js";
-import { AddOne, Edit, Delete } from "@icon-park/vue";
+import { list, del } from "@/network/dict.js"
+import { Edit, Delete, AddOne } from "@icon-park/vue";
+import editForm from "@/views/Admin/DictManage/edit.vue";
 export default {
-  name: "Admin-Article-list",
+  name: "Admin-Dict-list",
   props: {},
   components: {
-    AddOne, Edit, Delete
+    Edit, Delete, AddOne,
+    editForm
   },
   data() {
     return {
       page: {
-        offset: Number(this.$route.query.page) || 1,
+        offset: 1,
         limits: 10,
         total: 0,
         limitsOptions: ['10', '15', '20'],
       },
-
       searchData: {
-        title: undefined,
-        category: undefined,
-        status: undefined
+        dict_type_name: undefined,
       },
-
-      articleList: {
+      dictList: {
         data: undefined,
         columns: [
-          { colKey: 'row-select', type: 'multiple', width: 50},
-          { title: 'ID', colKey: 'id', width: 60},
-          { title: '标题', colKey: 'title'},
-          { title: '创建时间', colKey: 'created_at', cell: 'created_at', width: 160},
-          { title: '分类', colKey: 'category', cell: 'category', width: 100, align: 'center'},
-          { title: '评论', colKey: 'commentNum', width: 70, align: 'center'},
-          { title: '状态', colKey: 'status', cell: 'status', width: 80, align: 'center'},
-          { title: '操作', cell: 'action', width: 160, align: 'center'},
+          { colKey: 'row-select', type: 'multiple', width: 20, align: 'center'},
+          { title: 'ID', colKey: 'id', width: 30, align: 'center'},
+          { title: '字典分类', colKey: 'dict_type' , width: 100, align: 'center'},
+          { title: '字典分类名称', colKey: 'dict_type_name', width: 100, align: 'center'},
+          { title: '显示内容', colKey: 'name', width: 70, align: 'center'},
+          { title: '字典值', colKey: 'value', width: 70, align: 'center'},
+          { title: '创建时间', colKey: 'createdAt', cell: 'createdAt' , width: 130, align: 'center'},
+          { title: '操作', colKey: 'action', cell: 'action', width: 160, align: 'center', fixed: 'right'},
         ],
         tableHeight: 751,
         selectedRowKeys: [],
@@ -171,24 +157,22 @@ export default {
         id: undefined
       },
 
+      editModal: {
+        title: "字典编辑",
+        visible: false,
+        type: undefined,
+        data: undefined
+      },
+
       resizeObserver: undefined
     }
   },
   methods: {
-    async getDict() {
-      await this.$store.dispatch('dictv2/cacheDict', {
-        dict_type: 'articleType',
-      });
-
-      await this.$store.dispatch('dictv2/cacheDict', {
-        dict_type: 'statusType',
-      });
-    },
 
     listSearchDomChange() {
       this.resizeObserver = new ResizeObserver(entries => {
         let searchHeight = entries[0].borderBoxSize[0].blockSize;
-        this.articleList.tableHeight = 905 - 16 - 24 - 40 - 64 - searchHeight - 8;
+        this.dictList.tableHeight = 905 - 40 - 40 - 64 - searchHeight - 8;
 
       })
       this.resizeObserver.observe(this.$refs.search);
@@ -196,20 +180,21 @@ export default {
 
     // 表格行选择
     tableSelectChange(val, ctx) {
-      this.articleList.selectedRowKeys = val;
+      this.dictList.selectedRowKeys = val;
       // console.log(keys);
     },
 
-    // 获取文章列表
-    getArticleList() {
-      list(this.articleList_params).then(res => {
+    // 获取字典列表
+    getDictList() {
+      list(this.dictList_params).then(res => {
         if (res.code === 200) {
           this.page.total = res.data.count;
-          this.articleList.data = res.data.rows;
+          this.dictList.data = res.data.rows;
         }
       })
     },
 
+    
     // 分页组件改变
     pageChange(pageInfo) {
       if (pageInfo.current !== this.page.offset) {
@@ -222,87 +207,85 @@ export default {
         this.limitsChange(pageInfo.current, pageInfo.pageSize);
       }
     },
-
     // 页码改变
     offsetChange(page, pageSize) {
       this.page.offset = page;
       this.page.limits = pageSize;
-      this.getArticleList();
+      this.getDictList();
     },
 
     // 页面条数改变
     limitsChange(page, pageSize) {
       this.page.offset = 1;
       this.page.limits = pageSize;
-      this.getArticleList();
+      this.getDictList();
     },
+
     onReset() {
       resetObj(this.searchData);
       this.page.offset = 1;
       this.page.limits = 10;
-      this.getArticleList();
+      this.getDictList();
     },
-
     onSubmit() {
       this.page.offset = 1;
       this.page.limits = 10;
-      this.getArticleList();
+      this.getDictList();
     },
 
     del(type, id) {
       if (type === 'multiple') {
         this.delConfirm.visible = true;
         this.delConfirm.type = type;
-        this.delConfirm.content = `确定删除选中ID为${this.articleList.selectedRowKeys.join(',')}的文章吗？`;
+        this.delConfirm.content = `确定删除选中ID为${this.commentList.selectedRowKeys.join(',')}的评论吗？`;
       }else if (type === 'single') {
         this.delConfirm.visible = true;
         this.delConfirm.type = type;
-        this.delConfirm.content = `确定删除选中ID为${id}的文章吗？`;
+        this.delConfirm.content = `确定删除选中ID为${id}的评论吗？`;
         this.delConfirm.id = id;
       }
     },
-
     confirmDel() {
       del(this.del_data).then(res => {
-        if (res.code == 200) {
+        if (res.code === 200) {
           this.$message.success('删除成功');
-          this.getArticleList();
+          this.getDictList();
         }else{
           this.$message.error('删除失败');
         }
         this.delConfirm.visible = false;
       })
-
     },
 
-    gotoArticleEdit(type, id) {
-      let query = undefined;
+    gotoDictEdit(type, row) {
+      this.editModal.type = type;
+      this.editModal.visible = true;
       if (type === 'add') {
-        query = {
-          type: type
-        }
+        this.editModal.title = '添加字典';
       }else if (type === 'edit') {
-        query = {
-          type: type,
-          id: id
-        }
+        this.editModal.title = '编辑字典';
+        this.editModal.data = row;
       }
-      this.$router.push({
-        path: '/admin/articleedit',
-        query: query
-      })
-      
+    },
+    refreshList(){
+      this.editModal = {
+        title: "字典编辑",
+        visible: false,
+        type: undefined,
+        data: undefined
+      },
+      this.getDictList();
     }
   },
-  async mounted() {
-    await this.getDict();
-    this.getArticleList();
+  mounted() {
+    this.getDictList();
     this.$nextTick(() => {
       this.listSearchDomChange();
     })
   },
+  watch: {},
   computed: {
-    articleList_params: function() {
+    dictList_params: function() {
       return {
         search: JSON.stringify(filterObj(this.searchData)),
         offset: this.page.offset,
@@ -313,14 +296,13 @@ export default {
     del_data: function () {
       if (this.delConfirm.type === 'multiple') {
         return {
-          id: this.articleList.selectedRowKeys
+          id: this.dictList.selectedRowKeys
         }
       }else if (this.delConfirm.type === 'single') {
         return {
           id: [this.delConfirm.id]
         }
       }
-        
     }
   },
   beforeDestroy() {
@@ -329,28 +311,27 @@ export default {
       console.log('销毁resizeObserver');
     }
   },
-  watch: {}
 }
 </script>
 <style lang="scss" scoped>
-#Admin-Article-list{
-  padding: var(--td-size-4);
-  height: 100%;
-  width: calc(100vw - 240px);
-  box-sizing: border-box;
-
-  .card {
+  #Admin-Dict-list {
     padding: var(--td-size-4);
-    background-color: var(--td-bg-color-container);
-    border-radius: var(--td-radius-medium);
+    height: 100%;
+    width: calc(100vw - 240px);
     box-sizing: border-box;
-  }
 
-  .table {
-    margin-top: var(--td-size-4);
-    .operate {
-      margin-bottom: var(--td-size-4);
+    .card {
+      padding: var(--td-size-4);
+      background-color: var(--td-bg-color-container);
+      border-radius: var(--td-radius-medium);
+      box-sizing: border-box;
+    }
+
+    .table {
+      margin-top: var(--td-size-4);
+      .operate {
+        margin-bottom: var(--td-size-4);
+      }
     }
   }
-}
 </style>

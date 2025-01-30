@@ -39,13 +39,13 @@
 
               <t-form-item label="文章状态" name="status">
                 <t-select v-model="articleDetail.status">
-                  <t-option :label="option.value" :value="option.key" v-for="option in $store.getters['dict/getDictObj']('article', 'status')" :key="option.key" />
+                  <t-option :label="option.name" :value="option.value" v-for="option in $store.getters['dictv2/getDictObj']('statusType')" :key="option.value" />
                 </t-select>
               </t-form-item>
 
               <t-form-item label="文章分类" name="category">
                 <t-select v-model="articleDetail.category">
-                  <t-option :label="option.value" :value="option.key" v-for="option in $store.getters['dict/getDictObj']('article', 'category')" :key="option.key" />
+                  <t-option :label="option.name" :value="option.value" v-for="option in $store.getters['dictv2/getDictObj']('articleType')" :key="option.value" />
                 </t-select>
               </t-form-item>
 
@@ -113,9 +113,12 @@ export default {
     },
 
     async getDict() {
-      await this.$store.dispatch('dict/cacheDict', {
-        fileName: 'dict_article',
-        mutationsName: 'SET_ARTICLE'
+      await this.$store.dispatch('dictv2/cacheDict', {
+        dict_type: 'otherCommentType',
+      });
+
+      await this.$store.dispatch('dictv2/cacheDict', {
+        dict_type: 'statusType',
       });
     },
 

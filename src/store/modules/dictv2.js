@@ -1,4 +1,4 @@
-import { dict } from "@/network/static.js";
+import { findbytype } from "@/network/dict.js";
 
 export default {
   namespaced: true,
@@ -27,7 +27,7 @@ export default {
         return;
       }else{
         let data = undefined;
-        await dict({dict_type: payload.dict_type}).then(res => {
+        await findbytype({dict_type: payload.dict_type}).then(res => {
           data = res;
         });
 

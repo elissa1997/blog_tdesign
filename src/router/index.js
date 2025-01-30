@@ -123,6 +123,16 @@ const routes = [
         },
         component: () => import('@/views/Admin/otherComment/list.vue'),
       },
+      {
+        path: 'dictlist',
+        name: 'Admin-Dict-List',
+        meta: {
+          auth: true,
+          footer: false,
+          active: ['Admin', 'Dict']
+        },
+        component: () => import('@/views/Admin/DictManage/list.vue'),
+      },
     ]
   }
 ]

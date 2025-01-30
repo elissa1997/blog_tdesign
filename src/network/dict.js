@@ -1,39 +1,49 @@
 import { instance_api } from '@/network/axios.js'
 import Cookies from 'js-cookie';
 
-// 评论列表
+// 字典列表
 export function list(params) {
   return instance_api({
-    url: process.env.VUE_APP_API+'/comment/list',
+    url: process.env.VUE_APP_API+'/dict/list',
     method: 'get',
     params,
     headers: {'Authorization': 'Bearer ' + Cookies.get('token')}
   })
 }
 
-// 增加评论
-export function add(data) {
+export function findbytype(params) {
   return instance_api({
-    url: process.env.VUE_APP_API+'/comment/add',
-    method: 'post',
-    data
+    url: process.env.VUE_APP_API+'/dict/findbytype',
+    method: 'get',
+    params,
+    // headers: {'Authorization': 'Bearer ' + Cookies.get('token')}
   })
 }
 
-// 修改评论
-export function update(data) {
+// 增加字典
+export function add(data) {
   return instance_api({
-    url: process.env.VUE_APP_API+'/comment/update',
+    url: process.env.VUE_APP_API+'/dict/add',
     method: 'post',
     data,
     headers: {'Authorization': 'Bearer ' + Cookies.get('token')}
   })
 }
 
-// 删除评论
+// 修改字典
+export function update(data) {
+  return instance_api({
+    url: process.env.VUE_APP_API+'/dict/update',
+    method: 'post',
+    data,
+    headers: {'Authorization': 'Bearer ' + Cookies.get('token')}
+  })
+}
+
+// 删除字典
 export function del(data) {
   return instance_api({
-    url: process.env.VUE_APP_API+'/comment/del',
+    url: process.env.VUE_APP_API+'/dict/delete',
     method: 'post',
     data,
     headers: {'Authorization': 'Bearer ' + Cookies.get('token')}
