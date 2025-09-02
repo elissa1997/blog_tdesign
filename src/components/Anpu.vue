@@ -9,9 +9,10 @@
         pic: 'https://cdn.makedream.site/blog/audio/%E5%85%B3%E4%BA%8E%E6%88%91%E7%88%B1%E4%BD%A0-%E5%BC%A0%E6%82%AC.jpg'
       }"
     />
-    <div class="img">
-      <img :src="require('@/assets/img/footer_anpu.png')">
-    </div>
+
+    <!-- <iframe class="player" frameborder="no" border="0" marginwidth="0" marginheight="0" height=86 src="//music.163.com/outchain/player?type=2&id=27598340&auto=0&height=66"></iframe> -->
+    
+    <img class="img" :src="require('@/assets/img/footer_anpu.png')">
   </div>
 </template>
 
@@ -33,31 +34,38 @@ export default {
 </script>
 <style lang="scss" scoped>
 #Anpu{
-  .img {
-    // width: 100%;
-    padding-bottom: 5px;
-    img {
-      height: auto;
-      // mix-blend-mode: difference;
-      @include respond-to('desktop') {
-        width: 70%;
-      }
+  display: flex;
+  @include respond-to('desktop') {
+    flex-direction: column;
 
-      @include respond-to('phone') {
-        width: 100%;
-      }
+    .player {
+      width: 90%;
+    }
+
+    .img {
+      width: auto;
+      height: 100px;
+      object-fit: contain;
+    }
+  }
+
+  @include respond-to('phone') {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    .player {
+      width: 68%;
+    }
+
+    .img {
+      width: 30%;
+      height: auto;
+      object-fit: contain;
     }
   }
 
   .player {
-    @include respond-to('desktop') {
-      width: 70%;
-    }
-
-    @include respond-to('phone') {
-      width: 100%;
-    }
-
     background-color: var(--td-bg-color-container) !important;
 
     :deep(.aplayer-title) {

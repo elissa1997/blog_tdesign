@@ -9,7 +9,7 @@
         <t-menu-item value="Home"  :to="{path: '/'}">主页</t-menu-item>
         <t-menu-item value="Links" :to="{path: '/links'}">友链</t-menu-item>
         <t-menu-item value="About" :to="{path: '/about'}">关于</t-menu-item>
-        <t-menu-item value="Toolbox" href="https://tool.makedream.site/" target="_blank">工具箱</t-menu-item>
+        <t-menu-item value="Toolbox" href="https://tool.makedream.site/">工具箱</t-menu-item>
       <template #operations>
         <t-radio-group variant="default-filled" default-value="light" @change="darkModeChange">
           <t-radio-button value="light"><SunOne theme="filled" fill="#ffdc29"/></t-radio-button>
@@ -56,7 +56,7 @@
           <t-menu-item value="Home"  :to="{path: '/'}">主页</t-menu-item>
           <t-menu-item value="Links" :to="{path: '/links'}">友链</t-menu-item>
           <t-menu-item value="About" :to="{path: '/about'}">关于</t-menu-item>
-          <t-menu-item value="Toolbox" href="https://tool.makedream.site/">工具箱</t-menu-item>
+          <t-menu-item value="Toolbox" href="https://tool.makedream.site/" target="_blank">工具箱</t-menu-item>
         </t-menu>
       </div>
     </div>

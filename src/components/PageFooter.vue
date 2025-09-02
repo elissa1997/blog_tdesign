@@ -62,19 +62,19 @@
                   <div class="name">TDesign</div>
                 </div>
 
-                <!-- <div class="brand">
-                  <div class="icon"><img :src="require('@/assets/icon/brandIcon/IconPark.png')" alt=""></div>
-                  <div class="name">IconPark</div>
-                </div> -->
+                <div class="brand">
+                  <div class="icon"><img :src="require('@/assets/icon/brandIcon/NestJS.png')" alt=""></div>
+                  <div class="name">NestJS</div>
+                </div>
+
+                <div class="brand">
+                  <div class="icon"><img :src="require('@/assets/icon/brandIcon/qiniuyun.png')" alt=""></div>
+                  <div class="name">qiniu</div>
+                </div>
 
                 <div class="brand">
                   <div class="icon"><img :src="require('@/assets/icon/brandIcon/HUAWEI.png')" alt=""></div>
                   <div class="name">HUAWEI Cloud</div>
-                </div>
-
-                <div class="brand">
-                  <div class="icon"><img :src="require('@/assets/icon/brandIcon/EggJS.png')" alt=""></div>
-                  <div class="name">EggJS</div>
                 </div>
               </div>
             </div>
