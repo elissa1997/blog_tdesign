@@ -8,7 +8,9 @@
 import Vue from 'vue';
 import VMdPreview from '@kangc/v-md-editor/lib/preview';
 import vuepressTheme from '@kangc/v-md-editor/lib/theme/vuepress.js';
-import createKatexPlugin from '@kangc/v-md-editor/lib/plugins/katex/cdn';
+// import createKatexPlugin from '@kangc/v-md-editor/lib/plugins/katex/cdn';
+import createKatexPlugin from '@kangc/v-md-editor/lib/plugins/katex/npm';
+import 'katex/dist/katex.min.css';
 import Prism from 'prismjs';
 
 export default {
